@@ -1,0 +1,232 @@
+
+body {
+  font-family: Arial, sans-serif;
+  background: #0c6bfa;
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 60px; 
+  transition: background 0.5s ease;
+}
+
+main {
+  max-width: 400px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 1rem;
+  box-sizing: border-box;
+  padding-bottom: 60px; 
+}
+
+
+.card {
+  background: white;
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0 15px 16px rgba(20, 20, 20, 0.507);
+  font-family: 'Segoe UI', sans-serif;
+  transform: translateY(-50px);
+  opacity: 0;
+  animation: entradaSuave 1s forwards;
+}
+
+@keyframes entradaSuave {
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+h2 {
+  text-align: center;
+}
+
+
+#modo-escuro-toggle {
+  background: none;
+  border: 2px solid #007bff;
+  color: #007bff;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  margin-bottom: 15px;
+  transition: background 0.3s ease, color 0.3s ease, transform 0.2s ease;
+}
+
+#modo-escuro-toggle:hover {
+  background: #007bff;
+  color: white;
+  transform: scale(1.05);
+}
+
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  margin: 10px 0 5px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+}
+
+input, select {
+  padding: 8px 10px;
+  border-radius: 5px;
+  border: 1px solid #007bff;
+  margin-bottom: 15px;
+  font-size: 16px;
+  background-color: white;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.3s ease, background 0.3s ease;
+}
+
+select {
+  background-image: url('data:image/svg+xml;utf8,<svg fill="%23007bff" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 16px;
+}
+
+input:hover, select:hover {
+  transform: scale(1.05);
+}
+
+input:focus, select:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+  outline: none;
+}
+
+
+button {
+  margin-top: 15px;
+  padding: 10px;
+  background-color: rgb(253, 2, 2);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: transform 0.2s ease, background-color 0.3s ease;
+}
+
+button:hover {
+  transform: scale(1.05);
+  background: green;
+}
+
+#resetar {
+  display: none;
+  margin-top: 15px;
+  padding: 10px;
+  background-color: gray;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#resetar:hover {
+  background-color: #555;
+  transform: scale(1.05);
+}
+
+
+.resultado {
+  margin-top: 20px;
+  font-size: 16px;
+  color: #333;
+}
+
+
+.footer {
+  background-color: #007bff;
+  color: white;
+  text-align: center;
+  padding: 0 10px;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 50px;          
+  line-height: 50px;      
+  font-size: 14px;
+  box-sizing: border-box;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  transition: background 0.5s ease;
+}
+
+
+@media (max-width: 600px) {
+  .footer {
+    font-size: 12px;
+    height: 40px;
+    line-height: 40px;
+    padding: 0 8px;
+  }
+
+  main {
+    max-width: 100%;
+    padding: 1rem 0.5rem;
+    padding-bottom: 50px;
+  }
+
+  button, #resetar {
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  input, select {
+    font-size: 14px;
+    padding: 6px 8px;
+  }
+}
+
+
+body.dark-mode {
+  background: #121212;
+}
+
+body.dark-mode .card {
+  background: #1e1e1e;
+  color: #fff;
+}
+
+body.dark-mode label {
+  color: #ccc;
+}
+
+body.dark-mode input,
+body.dark-mode select {
+  background: #2c2c2c;
+  color: #fff;
+  border: 1px solid #555;
+}
+
+body.dark-mode .footer {
+  background: #222;
+}
+
+
+body.dark-mode #modo-escuro-toggle {
+  border-color: #ffee00; 
+  color: #ffee00;
+  background: transparent;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+body.dark-mode #modo-escuro-toggle:hover {
+  background: #ffee00;
+  color: #121212;
+}
+
+body.dark-mode .resultado {
+  color: #eee;
+}
