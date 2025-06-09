@@ -41,7 +41,6 @@ botaoResetar.addEventListener('click', () => {
   document.getElementById('distancia').focus();
 });
 
-// Evento para alternar modo escuro
 toggleBtn.addEventListener('click', () => {
   document.body.classList.toggle('dark-mode');
   toggleBtn.textContent = document.body.classList.contains('dark-mode')
