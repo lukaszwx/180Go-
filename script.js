@@ -1,78 +1,41 @@
-const form = document.getElementById("form");
-const resultado = document.getElementById("resultado");
+document.getElementById("calcular").addEventListener("click", () => {
 
-// 🔑 COLOCA SUA API KEY AQUI
-const API_KEY = "SUA_API_KEY_AQUI";
+    const km = parseFloat(document.getElementById("km").value);
+    const corridas = parseFloat(document.getElementById("corridas").value);
+    const horas = parseFloat(document.getElementById("horas").value);
+    const custoKm = parseFloat(document.getElementById("custo").value);
 
-// ================= GEO CODE =================
-async function getCoords(local) {
-  const res = await fetch(`https://api.openrouteservice.org/geocode/search?api_key=${API_KEY}&text=${local}`);
-  const data = await res.json();
+    if (!km || !corridas || !horas || !custoKm) {
+        alert("Preencha todos os campos");
+        return;
+    }
 
-  if (!data.features.length) throw new Error("Local não encontrado");
+    // Receita média por corrida
+    const mediaCorrida = 12;
 
-  return data.features[0].geometry.coordinates;
-}
+    const receita = corridas * mediaCorrida;
+    const custo = km * custoKm;
+    const lucro = receita - custo;
 
-// ================= ROTA =================
-async function getRoute(origem, destino) {
-  const res = await fetch("https://api.openrouteservice.org/v2/directions/driving-car", {
-    method: "POST",
-    headers: {
-      "Authorization": API_KEY,
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      coordinates: [origem, destino]
-    })
-  });
+    const mensal = lucro * 30;
 
-  const data = await res.json();
+    let feedback = "";
 
-  const summary = data.routes[0].summary;
+    if (lucro < 50) {
+        feedback = "⚠️ Ganho baixo. Talvez não esteja compensando.";
+    } else if (lucro < 150) {
+        feedback = "💡 Resultado razoável. Dá pra otimizar horários.";
+    } else {
+        feedback = "🔥 Excelente! Estratégia muito boa.";
+    }
 
-  return {
-    distancia: summary.distance / 1000, // km
-    tempo: summary.duration / 60 // minutos
-  };
-}
-
-// ================= PREÇO =================
-function calcularPreco(distancia, tempo, demanda) {
-  const base = 4;
-  const porKm = 1.5;
-  const porMin = 0.3;
-
-  return (base + distancia * porKm + tempo * porMin) * demanda;
-}
-
-// ================= FORM =================
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  const origemText = document.getElementById("origem").value;
-  const destinoText = document.getElementById("destino").value;
-  const demanda = parseFloat(document.getElementById("demanda").value);
-
-  resultado.innerHTML = "Calculando...";
-
-  try {
-    const origem = await getCoords(origemText);
-    const destino = await getCoords(destinoText);
-
-    const { distancia, tempo } = await getRoute(origem, destino);
-
-    const preco = calcularPreco(distancia, tempo, demanda);
-
-    resultado.innerHTML = `
-      <div class="result-box">
-        <h3>Resultado</h3>
-        <p>📍 Distância: ${distancia.toFixed(2)} km</p>
-        <p>⏱ Tempo: ${tempo.toFixed(0)} min</p>
-        <p>💰 Preço estimado: R$ ${preco.toFixed(2)}</p>
-      </div>
+    document.getElementById("resultado").innerHTML = `
+        <div class="result-box">
+            <p><strong>Receita diária:</strong> R$ ${receita.toFixed(2)}</p>
+            <p><strong>Custo diário:</strong> R$ ${custo.toFixed(2)}</p>
+            <p class="highlight"><strong>Lucro diário:</strong> R$ ${lucro.toFixed(2)}</p>
+            <p><strong>Estimativa mensal:</strong> R$ ${mensal.toFixed(2)}</p>
+            <p>${feedback}</p>
+        </div>
     `;
-  } catch (error) {
-    resultado.innerHTML = `<p style="color:red;">Erro: ${error.message}</p>`;
-  }
 });
