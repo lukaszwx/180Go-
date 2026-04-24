@@ -1,49 +1,78 @@
-const form = document.getElementById('simulador-form');
-const resultado = document.getElementById('resultado');
-const botaoResetar = document.getElementById('resetar');
-const toggleBtn = document.getElementById('modo-escuro-toggle')
+const form = document.getElementById("form");
+const resultado = document.getElementById("resultado");
 
-form.addEventListener('submit', function (e) {
+// 🔑 COLOCA SUA API KEY AQUI
+const API_KEY = "SUA_API_KEY_AQUI";
+
+// ================= GEO CODE =================
+async function getCoords(local) {
+  const res = await fetch(`https://api.openrouteservice.org/geocode/search?api_key=${API_KEY}&text=${local}`);
+  const data = await res.json();
+
+  if (!data.features.length) throw new Error("Local não encontrado");
+
+  return data.features[0].geometry.coordinates;
+}
+
+// ================= ROTA =================
+async function getRoute(origem, destino) {
+  const res = await fetch("https://api.openrouteservice.org/v2/directions/driving-car", {
+    method: "POST",
+    headers: {
+      "Authorization": API_KEY,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      coordinates: [origem, destino]
+    })
+  });
+
+  const data = await res.json();
+
+  const summary = data.routes[0].summary;
+
+  return {
+    distancia: summary.distance / 1000, // km
+    tempo: summary.duration / 60 // minutos
+  };
+}
+
+// ================= PREÇO =================
+function calcularPreco(distancia, tempo, demanda) {
+  const base = 4;
+  const porKm = 1.5;
+  const porMin = 0.3;
+
+  return (base + distancia * porKm + tempo * porMin) * demanda;
+}
+
+// ================= FORM =================
+form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  const distancia = parseFloat(document.getElementById('distancia').value);
-  const tempo = parseFloat(document.getElementById('tempo').value);
-  const demanda = parseFloat(document.getElementById('demanda').value);
-  const clima = parseFloat(document.getElementById('clima').value);
-  const transito = parseFloat(document.getElementById('transito').value);
+  const origemText = document.getElementById("origem").value;
+  const destinoText = document.getElementById("destino").value;
+  const demanda = parseFloat(document.getElementById("demanda").value);
 
-  if (isNaN(distancia) || distancia < 0) {
-    alert('Por favor, insira uma distância válida (0 ou mais).');
-    return;
+  resultado.innerHTML = "Calculando...";
+
+  try {
+    const origem = await getCoords(origemText);
+    const destino = await getCoords(destinoText);
+
+    const { distancia, tempo } = await getRoute(origem, destino);
+
+    const preco = calcularPreco(distancia, tempo, demanda);
+
+    resultado.innerHTML = `
+      <div class="result-box">
+        <h3>Resultado</h3>
+        <p>📍 Distância: ${distancia.toFixed(2)} km</p>
+        <p>⏱ Tempo: ${tempo.toFixed(0)} min</p>
+        <p>💰 Preço estimado: R$ ${preco.toFixed(2)}</p>
+      </div>
+    `;
+  } catch (error) {
+    resultado.innerHTML = `<p style="color:red;">Erro: ${error.message}</p>`;
   }
-
-  if (isNaN(tempo) || tempo < 1) {
-    alert('Por favor, insira um tempo válido (1 minuto ou mais).');
-    return;
-  }
-
-  const precoBase = 1 + (0.6 * distancia) + (0.3 * tempo);
-  const precoFinal = precoBase * demanda * clima * transito;
-
-  resultado.innerHTML = `
-    <p><strong>Preço Estimado 180 Go:</strong> R$ ${precoFinal.toFixed(2)}</p>
-    <p><strong>Comparativo 99:</strong> R$ 70,90</p>
-    <p><strong>Economia:</strong> R$ ${(70.90 - precoFinal).toFixed(2)}</p>
-  `;
-
-  botaoResetar.style.display = 'block';
-});
-
-botaoResetar.addEventListener('click', () => {
-  form.reset();
-  resultado.innerHTML = '';
-  botaoResetar.style.display = 'none';
-  document.getElementById('distancia').focus();
-});
-
-toggleBtn.addEventListener('click', () => {
-  document.body.classList.toggle('dark-mode');
-  toggleBtn.textContent = document.body.classList.contains('dark-mode')
-    ? 'Light Mode'
-    : 'Dark Mode';
 });
