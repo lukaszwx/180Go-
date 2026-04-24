@@ -2,66 +2,36 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Simulador 180 Go</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>180 Go | Simulador Inteligente</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main>
-    <div class="card">
-      <button id="modo-escuro-toggle"> Dark Mode</button>
-      <h2>180 Go!</h2>
 
-      <form id="simulador-form">
-        <input type="number" id="distancia" placeholder="Distância (km)" required min="0" step="0.1" />
-        <input type="number" id="tempo" placeholder="Tempo (min)" required min="1" step="0.1" />
+<main>
+  <div class="card">
+    <h2>180 Go</h2>
+    <p class="subtitle">Simulador inteligente de corridas</p>
 
-        <label for="demanda">Demanda</label>
-        <select id="demanda" required>
-          <option value="0.8">Baixa</option>
-          <option value="1.0" selected>Média</option>
-          <option value="1.2">Alta</option>
-          <option value="1.5">Muito Alta</option>
-        </select>
+    <form id="form">
+      <input type="text" id="origem" placeholder="Origem (ex: Centro)" required>
+      <input type="text" id="destino" placeholder="Destino (ex: Aeroporto)" required>
 
-        <label for="clima">Clima</label>
-        <select id="clima" required>
-          <option value="1.0" selected>Normal</option>
-          <option value="1.1">Chuvoso</option>
-          <option value="1.2">Chuva Forte</option>
-          <option value="0.9">Ensolarado</option>
-        </select>
+      <label>Demanda</label>
+      <select id="demanda">
+        <option value="0.8">Baixa</option>
+        <option value="1" selected>Média</option>
+        <option value="1.3">Alta</option>
+        <option value="1.6">Muito Alta</option>
+      </select>
 
-        <label for="transito">Trânsito</label>
-        <select id="transito" required>
-          <option value="0.8">Leve</option>
-          <option value="1.0" selected>Moderado</option>
-          <option value="1.3">Pesado</option>
-          <option value="1.6">Congestionado</option>
-        </select>
+      <button type="submit">Calcular corrida</button>
+    </form>
 
-        <button type="submit">Simular</button>
-      </form>
+    <div id="resultado"></div>
+  </div>
+</main>
 
-      <div id="resultado" class="resultado"></div>
-      <button type="button" id="resetar">Limpar</button>
-    </div>
-  </main>
-
-  <footer class="footer">
-    <p>180 Go! - by lukaszwx</p>
-  </footer>
-
-  <script src="script.js"></script>
-  <script>
-    const toggleBtn = document.getElementById('modo-escuro-toggle');
-
-    toggleBtn.addEventListener('click', () => {
-      document.body.classList.toggle('dark-mode');
-      toggleBtn.textContent = document.body.classList.contains('dark-mode') 
-        ? 'Light Mode' 
-        : 'Dark Mode';
-    });
-  </script>
+<script src="script.js"></script>
 </body>
 </html>
